@@ -6,9 +6,8 @@
 ;; Author: John Wiegley <johnw@gnu.org>
 ;; Maintainer: Sacha Chua <sacha@free.net.ph>
 ;; Created: 29 Mar 1999
-;; Version: $Version$
 ;; Keywords: data memory todo pim bbdb
-;; URL: http://sacha.free.net.ph/notebook/emacs/emacs-wiki/remember-bbdb.el
+;; URL: http://gna.org/projects/remember-el/
 
 ;; GNU Emacs is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

@@ -3,9 +3,8 @@
 ;; Copyright (C) 2003 Sandra Jean Chua
 
 ;; Author: Sacha Chua <sacha@free.net.ph>
-;; Version: $Version$
 ;; Keywords: data memory todo pim
-;; URL: http://sacha.free.net.ph/notebook/emacs/emacs-wiki/
+;; URL: http://gna.org/projects/remember-el/
 
 ;; This file is not part of GNU Emacs.
 

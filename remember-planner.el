@@ -6,9 +6,8 @@
 ;; Author: John Wiegley <johnw@gnu.org>
 ;; Maintainer: Sacha Chua <sacha@free.net.ph>
 ;; Created: 29 Mar 1999
-;; Version: $Version$
 ;; Keywords: data memory todo pim blog
-;; URL: http://sacha.free.net.ph/notebook/emacs/emacs-wiki/remember-planner.el
+;; URL: http://gna.org/projects/remember-el/
 
 ;; This file is not part of GNU Emacs.
 

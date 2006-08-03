@@ -5,10 +5,8 @@
 
 ;; Author: Sacha Chua <sacha@free.net.ph>
 ;; Created: 24 Mar 2004
-;; Version: $Version$
 ;; Keywords: data memory todo pim diary
-;; URL: http://sacha.free.net.ph/notebook/emacs/emacs-wiki/
-;; X-URL: http://www.gci-net.com/users/j/johnw/emacs.html
+;; URL: http://gna.org/projects/remember-el/
 
 ;; This file is not part of GNU Emacs.
 
