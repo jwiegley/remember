@@ -1,15 +1,14 @@
 ;;; remember --- a mode for quickly jotting down things to remember
 
 ;; Copyright (C) 1999, 2000, 2001 John Wiegley
-;; Copyright (C) 2003 Sandra Jean Chua
+;; Copyright (C) 2003, 2004, 2005, 2006 Sandra Jean Chua
 
 ;; Author: John Wiegley <johnw@gnu.org>
 ;; Maintainer: Sacha Chua <sacha@free.net.ph>
 ;; Created: 29 Mar 1999
-;; Version: $Version$
+;; Version: 1.7
 ;; Keywords: data memory todo pim
-;; URL: http://sacha.free.net.ph/notebook/emacs/emacs-wiki/
-;; X-URL: http://www.gci-net.com/users/j/johnw/emacs.html
+;; URL: http://gna.org/projects/remember-el/
 
 ;; This file is not part of GNU Emacs.
 
@@ -168,7 +167,7 @@
 
 (provide 'remember)
 
-(defconst remember-version "$Version: arch$"
+(defconst remember-version "1.7"
   "This version of remember.")
 
 (defgroup remember nil
