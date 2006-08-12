@@ -76,6 +76,7 @@
          t t entry)
       entry)))
 
+;;;###autoload
 (defun remember-diary-extract-entries ()
   "Extract diary entries from the region."
   (save-excursion

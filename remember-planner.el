@@ -77,6 +77,7 @@ This defaults to the current planner page."
                  (const :tag "Current page" nil))
   :group 'remember)
 
+;;;###autoload
 (defun remember-planner-append (&optional page)
   "Remember this text to PAGE or today's page.
 This function can be added to `remember-handler-functions'."

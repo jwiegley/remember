@@ -1,3 +1,10 @@
+2006-08-12  Michael Olson  <mwolson@gnu.org>
+
+	* remember-diary.el (remember-diary-extract-entries): Add autoload
+	cookie.
+
+	* remember-planner.el (remember-planner-append): Ditto.
+
 2006-08-03  Michael Olson  <mwolson@gnu.org>
 
 	* Makefile: New build system for Remember.
