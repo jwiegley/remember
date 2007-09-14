@@ -3,24 +3,24 @@
 
 include Makefile.defs
 
-EL  = $(filter-out remember-autoloads.el,$(wildcard *.el))
+EL  = $(filter-out $(PROJECT)-autoloads.el,$(wildcard *.el))
 ELC = $(patsubst %.el,%.elc,$(EL))
 
 all: autoloads lisp $(MANUAL).info
 
 lisp: $(ELC)
 
-remember-build.elc: ./scripts/remember-build.el
-	@echo remember-build.el is not byte-compiled
+$(PROJECT)-build.elc: ./scripts/$(PROJECT)-build.el
+	@echo $(PROJECT)-build.el is not byte-compiled
 
-autoloads: remember-autoloads.el
+autoloads: $(PROJECT)-autoloads.el
 
-remember-autoloads.el: $(EL)
-	@$(EMACS) -q $(SITEFLAG) -batch -l ./scripts/remember-build.el \
-		-f remember-generate-autoloads .
+$(PROJECT)-autoloads.el: $(EL)
+	@$(EMACS) -q $(SITEFLAG) -batch -l ./scripts/$(PROJECT)-build.el \
+		-f $(PROJECT)-generate-autoloads .
 
 %.elc: %.el
-	@$(EMACS) -q $(SITEFLAG) -batch -l ./scripts/remember-build.el \
+	@$(EMACS) -q $(SITEFLAG) -batch -l ./scripts/$(PROJECT)-build.el \
 		-f batch-byte-compile $< || :
 
 %.info: %.texi
@@ -35,18 +35,19 @@ clean:
 	-rm -f *.elc *~
 
 realclean fullclean: clean
-	-rm -f $(MANUAL).info $(MANUAL).html remember-autoloads.el
+	-rm -f $(MANUAL).info $(MANUAL).html $(PROJECT)-autoloads.el
 
 install: autoloads lisp $(MANUAL).info
 	install -d $(ELISPDIR)
-	install -m 0644 remember-autoloads.el $(EL) $(wildcard *.elc) $(ELISPDIR)
+	install -m 0644 $(PROJECT)-autoloads.el $(EL) $(wildcard *.elc) \
+	    $(ELISPDIR)
 	[ -d $(INFODIR) ] || install -d $(INFODIR)
 	install -m 0644 $(MANUAL).info $(INFODIR)/$(MANUAL)
 	$(INSTALLINFO) $(INFODIR)/$(MANUAL)
 
 test: $(ELC)
-	$(EMACS) -q $(SITEFLAG) -batch -l ./scripts/remember-build.el \
-		-f remember-elint-files remember-*.el
+	$(EMACS) -q $(SITEFLAG) -batch -l ./scripts/$(PROJECT)-build.el \
+		-f $(PROJECT)-elint-files $(EL)
 
 distclean:
 	-rm -f $(MANUAL).info $(MANUAL).html debian/dirs debian/files
@@ -56,7 +57,7 @@ dist: autoloads distclean
 	tla inventory -sB | tar -cf - --no-recursion -T- | \
 	  (mkdir -p ../$(PROJECT)-$(VERSION); cd ../$(PROJECT)-$(VERSION) && \
 	  tar xf -)
-	cp remember-autoloads.el ../$(PROJECT)-$(VERSION)
+	cp $(PROJECT)-autoloads.el ../$(PROJECT)-$(VERSION)
 	rm -fr ../$(PROJECT)-$(VERSION)/debian ../$(PROJECT)-$(VERSION)/test
 
 release: dist

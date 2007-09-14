@@ -1,3 +1,7 @@
+2007-09-14  Michael Olson  <mwolson@gnu.org>
+
+	* Makefile: Generalize, replacing "remember" with "$(PROJECT)".
+
 2006-08-12  Michael Olson  <mwolson@gnu.org>
 
 	* remember-diary.el (remember-diary-extract-entries): Add autoload
