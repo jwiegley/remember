@@ -1,3 +1,11 @@
+2007-09-14  John Wiegley  <johnw@gnu.org>
+
+	* remember.el (remember-in-new-frame): New option indicating
+	whether to use a separate frame for capturing remember data.
+	(remember): Use it.
+	(remember-other-frame): New function that calls remember in
+	another frame.
+
 2007-09-14  Michael Olson  <mwolson@gnu.org>
 
 	* Makefile: Generalize, replacing "remember" with "$(PROJECT)".

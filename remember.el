@@ -1,6 +1,6 @@
 ;;; remember --- a mode for quickly jotting down things to remember
 
-;; Copyright (C) 1999, 2000, 2001 John Wiegley
+;; Copyright (C) 1999, 2000, 2001, 2007 John Wiegley
 ;; Copyright (C) 2003, 2004, 2005, 2006 Sandra Jean Chua
 
 ;; Author: John Wiegley <johnw@gnu.org>
@@ -182,6 +182,11 @@
   :options '(flyspell-mode turn-on-auto-fill)
   :group 'remember)
 
+(defcustom remember-in-new-frame nil
+  "Non-nil means use a separate frame for capturing remember data."
+  :type 'boolean
+  :group 'remember)
+
 (defcustom remember-register ?R
   "The register in which the window configuration is stored."
   :type 'character
@@ -252,17 +257,25 @@ With a prefix, uses the region as INITIAL."
   (interactive
    (list (when current-prefix-arg
            (buffer-substring (point) (mark)))))
-  (window-configuration-to-register remember-register)
+  (funcall (if remember-in-new-frame
+               #'frame-configuration-to-register
+             #'window-configuration-to-register) remember-register)
   (let* ((annotation
           (if remember-run-all-annotation-functions-flag
               (mapconcat 'identity
-                         (delq nil (mapcar 'funcall remember-annotation-functions))
+                         (delq nil
+                               (mapcar 'funcall remember-annotation-functions))
                          "\n")
             (run-hook-with-args-until-success
              'remember-annotation-functions)))
          (buf (get-buffer-create remember-buffer)))
     (run-hooks 'remember-before-remember-hook)
-    (switch-to-buffer-other-window buf)
+    (funcall (if remember-in-new-frame
+                 #'switch-to-buffer-other-frame
+               #'switch-to-buffer-other-window) buf)
+    (if remember-in-new-frame
+        (set-window-dedicated-p
+         (get-buffer-window (current-buffer) (selected-frame)) t))
     (remember-mode)
     (when (= (point-max) (point-min))
       (when initial (insert initial))
@@ -274,6 +287,15 @@ With a prefix, uses the region as INITIAL."
       (setq remember-initial-contents nil)
       (goto-char (point-min)))
     (message "Use C-c C-c to remember the data.")))
+
+;;;###autoload
+(defun remember-other-frame (&optional initial)
+  "Call `remember' in another frame."
+  (interactive
+   (list (when current-prefix-arg
+           (buffer-substring (point) (mark)))))
+  (let ((remember-in-new-frame t))
+    (remember initial)))
 
 (defsubst remember-time-to-seconds (time)
   "Convert TIME to a floating point number."
