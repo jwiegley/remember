@@ -1,35 +1,34 @@
 ;;; remember --- a mode for quickly jotting down things to remember
 
-;; Copyright (C) 1999, 2000, 2001, 2007 John Wiegley
-;; Copyright (C) 2003, 2004, 2005, 2006 Sandra Jean Chua
+;; Copyright (C) 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007,
+;;   2008  Free Software Foundation, Inc.
 
 ;; Author: John Wiegley <johnw@gnu.org>
-;; Maintainer: Sacha Chua <sacha@free.net.ph>
 ;; Created: 29 Mar 1999
 ;; Version: 1.9
 ;; Keywords: data memory todo pim
 ;; URL: http://gna.org/projects/remember-el/
 
-;; This file is not part of GNU Emacs.
+;; This file is part of GNU Emacs.
 
-;; This is free software; you can redistribute it and/or modify it under
-;; the terms of the GNU General Public License as published by the Free
-;; Software Foundation; either version 2, or (at your option) any later
-;; version.
-;;
-;; This is distributed in the hope that it will be useful, but WITHOUT
-;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-;; for more details.
-;;
+;; GNU Emacs is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+
+;; GNU Emacs is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-;; MA 02111-1307, USA.
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
 
-;; The idea
+;; * The idea
 ;;
 ;; Todo lists, schedules, phone databases... everything we use
 ;; databases for is really just a way to extend the power of our
@@ -56,7 +55,7 @@
 ;; should be as close to simply throwing the data at Emacs as
 ;; possible.
 ;;
-;; Implementation
+;; * Implementation
 ;;
 ;; Hyperbole, as a data presentation tool, always struck me as being
 ;; very powerful, but it seemed to require a lot of "front-end" work
@@ -98,7 +97,7 @@
 ;; and user feedback will help to make this as intuitive a tool as
 ;; possible.
 ;;
-;; Future Goals
+;; * Future Goals
 ;;
 ;; This tool hopes to track (and by doing it with as little new code
 ;; as possible):
@@ -120,7 +119,7 @@
 ;;  - Storage of the data in a manner most appopriate to that data,
 ;;    such as keeping address-book type information in BBDB, etc.
 ;;
-;; Using "remember"
+;; * Using "remember"
 ;;
 ;; As a rough beginning, what I do is to keep my .notes file in
 ;; outline-mode format, with a final entry called "* Raw data".  Then,
@@ -129,28 +128,22 @@
 ;; mechanism for shuffling data off to its appropriate corner of the
 ;; universe.
 ;;
-;; Mapping the remember functions to very accessible keystrokes
-;; facilities using the mode:
+;; To map the primary remember function to the keystroke F8, do the
+;; following.
 ;;
-;;  (autoload 'remember "remember" nil t)
-;;  (autoload 'remember-region "remember" nil t)
+;;   (autoload 'remember "remember" nil t)
 ;;
-;;  (define-key global-map [f8] 'remember)
-;;  (define-key global-map [f9] 'remember-region)
+;;   (define-key global-map [f8] 'remember)
 ;;
-;; planner.el users should use `remember-to-planner' instead of `remember'
-;; to save more context information.
+;; * Feedback
 ;;
-;; Feedback
-;;
-;; Please send me your comments and ideas.  If Emacs could become a
-;; more intelligent data store, where brainstorming would focus on the
-;; IDEAS involved -- rather than the structuring and format of those
-;; ideas, or having to stop your current flow of work in order to
-;; record them -- it would map much more closely to how the mind
-;; (well, at least mine) works, and hence would eliminate that very
-;; manual-ness which computers from the very beginning have been
-;; championed as being able to reduce.
+;; If Emacs could become a more intelligent data store, where
+;; brainstorming would focus on the IDEAS involved -- rather than the
+;; structuring and format of those ideas, or having to stop your
+;; current flow of work in order to record them -- it would map much
+;; more closely to how the mind (well, at least mine) works, and hence
+;; would eliminate that very manual-ness which computers from the very
+;; beginning have been championed as being able to reduce.
 ;;
 ;; Have you ever noticed that having a laptop to write on doesn't
 ;; _actually_ increase the amount of quality material that you turn
@@ -160,6 +153,29 @@
 ;; Faridu'd-Din `Attar wrote: "Be occupied as little as possible with
 ;; things of the outer world but much with things of the inner world;
 ;; then right action will overcome inaction."
+;;
+;; * Diary integration
+;;
+;; To use, add the following to your .emacs:
+;;
+;;   ;; This should be before other entries that may return t
+;;   (add-to-list 'remember-handler-functions 'remember-diary-extract-entries)
+;;
+;; This module recognizes entries of the form
+;;
+;;   DIARY: ....
+;;
+;; and puts them in your ~/.diary (or remember-diary-file) together
+;; with an annotation.  Dates in the form YYYY.MM.DD are converted to
+;; YYYY-MM-DD so that diary can understand them.
+;;
+;; For example:
+;;
+;;   DIARY: 2003.08.12 Sacha's birthday
+;;
+;; is stored as
+;;
+;;   2003.08.12 Sacha's birthday
 
 ;;; History:
 
@@ -179,7 +195,7 @@
 (defcustom remember-mode-hook nil
   "Functions run upon entering `remember-mode'."
   :type 'hook
-  :options '(flyspell-mode turn-on-auto-fill)
+  :options '(flyspell-mode turn-on-auto-fill org-remember-apply-template)
   :group 'remember)
 
 (defcustom remember-in-new-frame nil
@@ -205,6 +221,10 @@ user wants remembered.
 If any function returns non-nil, the data is assumed to have been
 recorded somewhere by that function. "
   :type 'hook
+  :options '(remember-store-in-mailbox
+             remember-append-to-file
+             remember-diary-extract-entries
+             org-remember-handler)
   :group 'remember)
 
 (defcustom remember-all-handler-functions nil
@@ -232,31 +252,39 @@ called."
   (if (boundp 'planner-annotation-functions)
       planner-annotation-functions
     '(buffer-file-name))
-  "Hook that returns an annotation to be inserted into the remember buffer.
-If you have planner.el, it's nice to set this to
-`planner-annotation-functions'."
+  "Hook that returns an annotation to be inserted into the remember buffer."
   :type 'hook
+  :options '(org-remember-annotation buffer-file-name)
   :group 'remember)
 
 (defvar remember-annotation nil
   "Current annotation.")
 (defvar remember-initial-contents nil
   "Initial contents to place into *Remember* buffer.")
-(defvar remember-before-remember-hook nil
-  "Functions run before switching to the *Remember* buffer.")
+
+(defcustom remember-before-remember-hook nil
+  "Functions run before switching to the *Remember* buffer."
+  :type 'hook
+  :group 'remember)
 
 (defcustom remember-run-all-annotation-functions-flag nil
-  "Non-nil means use all annotations returned by `remember-annotation-functions'."
+  "Non-nil means use all annotations returned by
+`remember-annotation-functions'."
   :type 'boolean
   :group 'remember)
 
 ;;;###autoload
 (defun remember (&optional initial)
   "Remember an arbitrary piece of data.
-With a prefix, uses the region as INITIAL."
+INITIAL is the text to initially place in the *Remember* buffer,
+or nil to bring up a blank *Remember* buffer.
+
+With a prefix or a visible region, use the region as INITIAL."
   (interactive
-   (list (when current-prefix-arg
-           (buffer-substring (point) (mark)))))
+   (list (when (or current-prefix-arg
+                   (and mark-active
+                        transient-mark-mode))
+           (buffer-substring (region-beginning) (region-end)))))
   (funcall (if remember-in-new-frame
                #'frame-configuration-to-register
              #'window-configuration-to-register) remember-register)
@@ -307,7 +335,7 @@ With a prefix, uses the region as INITIAL."
   "Return a simple date.  Nothing fancy."
   (if rfc822-p
       (format-time-string "%a, %e %b %Y %T %z" (current-time))
-    (format-time-string "%c" (current-time))))
+    (format-time-string "%a %b %e %T %Y" (current-time))))
 
 (defun remember-buffer-desc ()
   "Using the first line of the current buffer, create a short description."
@@ -342,8 +370,7 @@ field, for the purpose of appropriate splitting."
         (desc (remember-buffer-desc))
         (text (buffer-string)))
     (with-temp-buffer
-      (insert (format "
-From %s  %s
+      (insert (format "From %s  %s
 Date: %s
 From: %s
 Message-Id: <remember-%s@%s>
@@ -368,8 +395,6 @@ Subject: %s\n\n"
           (replace-match ">\\1")))
       (append-to-file (point-min) (point-max) remember-mailbox)
       t)))
-
-(custom-add-option 'remember-handler-functions 'remember-store-in-mailbox)
 
 ;; Remembering to plain files
 
@@ -401,17 +426,15 @@ Subject: %s\n\n"
               (when remember-save-after-remembering (save-buffer))))
         (append-to-file (point-min) (point-max) remember-data-file)))))
 
-(custom-add-option 'remember-handler-functions 'remember-append-to-file)
-
-;;;###autoload
 (defun remember-region (&optional beg end)
   "Remember the data from BEG to END.
-If called from within the remember buffer, BEG and END are ignored,
-and the entire buffer will be remembered.
+It is called from within the *Remember* buffer to save the text
+that was entered.
 
-This function is meant to be called from the *Remember* buffer.
+If BEG and END are nil, the entire buffer will be remembered.
+
 If you want to remember a region, supply a universal prefix to
-`remember' instead. For example: C-u M-x remember."
+`remember' instead.  For example: C-u M-x remember RET."
   ;; Sacha: I have no idea where remember.el gets this context information, but
   ;; you can just use remember-annotation-functions.
   (interactive)
@@ -432,13 +455,16 @@ application."
   (interactive)
   (remember (current-kill 0)))
 
-;;;###autoload
-(defun remember-buffer ()
+(defun remember-finalize ()
   "Remember the contents of the current buffer."
   (interactive)
   (remember-region (point-min) (point-max)))
 
-;;;###autoload
+;; Org needs this
+(if (fboundp 'define-obsolete-function-alias)
+    (define-obsolete-function-alias 'remember-buffer 'remember-finalize)
+  (defalias 'remember-buffer 'remember-finalize))
+
 (defun remember-destroy ()
   "Destroy the current *Remember* buffer."
   (interactive)
@@ -446,22 +472,65 @@ application."
     (kill-buffer (current-buffer))
     (jump-to-register remember-register)))
 
+;;; Diary integration
+
+(defcustom remember-diary-file nil
+  "*File for extracted diary entries.
+If this is nil, then `diary-file' will be used instead."
+  :type 'file
+  :group 'remember)
+
+(defun remember-diary-convert-entry (entry)
+  "Translate MSG to an entry readable by diary."
+  (save-match-data
+    (when remember-annotation
+        (setq entry (concat entry " " remember-annotation)))
+    (if (string-match "\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)" entry)
+        (replace-match
+         (if european-calendar-style
+             (concat (match-string 3 entry) "/"
+                     (match-string 2 entry) "/"
+                     (match-string 1 entry))
+           (concat (match-string 2 entry) "/"
+                   (match-string 3 entry) "/"
+                   (match-string 1 entry)))
+         t t entry)
+      entry)))
+
+(autoload 'make-diary-entry "diary-lib")
+
+;;;###autoload
+(defun remember-diary-extract-entries ()
+  "Extract diary entries from the region."
+  (save-excursion
+    (goto-char (point-min))
+    (let (list)
+      (while (re-search-forward "^DIARY:\\s-*\\(.+\\)" nil t)
+        (add-to-list 'list (remember-diary-convert-entry (match-string 1))))
+      (when list
+        (make-diary-entry (mapconcat 'identity list "\n")
+                          nil (or remember-diary-file diary-file)))
+      nil))) ;; Continue processing
+
 ;;; Internal Functions:
 
-(defvar remember-mode-map ()
+(defvar remember-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-x\C-s" 'remember-finalize)
+    (define-key map "\C-c\C-c" 'remember-finalize)
+    (define-key map "\C-c\C-k" 'remember-destroy)
+
+    map)
   "Keymap used in Remember mode.")
-(when (not remember-mode-map)
-  (setq remember-mode-map (make-sparse-keymap))
-  (define-key remember-mode-map "\C-x\C-s" 'remember-buffer)
-  (define-key remember-mode-map "\C-c\C-c" 'remember-buffer)
-  (define-key remember-mode-map "\C-c\C-k" 'remember-destroy))
 
 (defun remember-mode ()
   "Major mode for output from \\[remember].
-\\<remember-mode-map>This buffer is used to collect data that you want
-remember.  Just hit \\[remember-region] when you're done entering, and
-it will go ahead and file the data for latter retrieval, and possible
-indexing.  \\{remember-mode-map}"
+This buffer is used to collect data that you want to remember.
+
+Just hit `C-c C-c' when you're done entering, and it will file
+the data away for latter retrieval, and possible indexing.
+
+\\{remember-mode-map}"
   (interactive)
   (kill-all-local-variables)
   (indented-text-mode)
@@ -470,4 +539,5 @@ indexing.  \\{remember-mode-map}"
         mode-name "Remember")
   (run-hooks 'remember-mode-hook))
 
+;; arch-tag: 59312a05-06c7-4da1-b6f7-5ea41c9d5577
 ;;; remember.el ends here
