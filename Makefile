@@ -6,7 +6,7 @@ include Makefile.defs
 EL  = $(filter-out $(PROJECT)-autoloads.el,$(wildcard *.el))
 ELC = $(patsubst %.el,%.elc,$(EL))
 
-all: autoloads lisp $(MANUAL).info
+all: autoloads lisp $(MANUAL).info $(MANUAL)-extra.info
 
 lisp: $(ELC)
 
@@ -29,28 +29,34 @@ $(PROJECT)-autoloads.el: $(EL)
 %.html: %.texi
 	makeinfo --html --no-split $<
 
-doc: $(MANUAL).info $(MANUAL).html
+doc: $(MANUAL).info $(MANUAL)-extra.info $(MANUAL).html $(MANUAL)-extra.html
 
 clean:
 	-rm -f *.elc *~
 
 realclean fullclean: clean
-	-rm -f $(MANUAL).info $(MANUAL).html $(PROJECT)-autoloads.el
+	-rm -f $(MANUAL).info $(MANUAL)-extra.info \
+	    $(MANUAL).html $(MANUAL)-extra.html \
+	    $(PROJECT)-autoloads.el
 
-install: autoloads lisp $(MANUAL).info
+install: autoloads lisp $(MANUAL).info $(MANUAL)-extra.info
 	install -d $(ELISPDIR)
 	install -m 0644 $(PROJECT)-autoloads.el $(EL) $(wildcard *.elc) \
 	    $(ELISPDIR)
 	[ -d $(INFODIR) ] || install -d $(INFODIR)
 	install -m 0644 $(MANUAL).info $(INFODIR)/$(MANUAL)
+	install -m 0644 $(MANUAL)-extra.info $(INFODIR)/$(MANUAL)-extra
 	$(INSTALLINFO) $(INFODIR)/$(MANUAL)
+	$(INSTALLINFO) $(INFODIR)/$(MANUAL)-extra
 
 test: $(ELC)
 	$(EMACS) -q $(SITEFLAG) -batch -l ./scripts/$(PROJECT)-build.el \
 		-f $(PROJECT)-elint-files $(EL)
 
 distclean:
-	-rm -f $(MANUAL).info $(MANUAL).html debian/dirs debian/files
+	-rm -f $(MANUAL).info $(MANUAL)-extra.info \
+	    $(MANUAL).html $(MANUAL)-extra.html \
+	    debian/dirs debian/files
 	-rm -fr ../$(PROJECT)-$(VERSION)
 
 dist: autoloads distclean
