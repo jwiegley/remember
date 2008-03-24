@@ -13,6 +13,27 @@
 	* remember-extra.texi: New manual containing text that was removed
 	from the version of the manual which is in Emacs 23.
 
+	* remember-diary.el: Merge contents into remember.el.
+
+	* remember.el: Improvements from Emacs 23.  Revise header.
+	(remember-mode-hook): Add option for org-remember-apply-template.
+	(remember-handler-functions): Move options here and eliminate
+	custom-add-option calls.  Add org-remember-handler.
+	(remember-annotation-functions): Add options for
+	org-remember-annotation and buffer-file-name.
+	(remember-before-remember-hook): Make this customizable.
+	(remember-run-all-annotation-functions-flag): Minor docfix.
+	(remember): Use better coding for detection of an existing region.
+	(remember-mail-date): Use mutt-friendly value.  Thanks to Trent
+	Buck for the patch.
+	(remember-store-in-mailbox): Omit blank line because it trips up
+	some email clients.  Thanks to Trent Buck for the patch.
+	(remember-region): Docfix.
+	(remember-finalize): Rename from remember-buffer and define an
+	alias for the old name.
+	(remember-mode-map): Populate this correctly.
+	(remember-mode): Docfix.
+
 2007-09-14  John Wiegley  <johnw@gnu.org>
 
 	* remember.el (remember-in-new-frame): New option indicating
