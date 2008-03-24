@@ -1,3 +1,18 @@
+2008-03-23  Michael Olson  <mwolson@gnu.org>
+
+	* Makefile: Build both remember.texi and remember-extra.texi.
+
+	* Makefile.defs (MANUAL): Change from remember-el to remember.
+
+	* doclicense.texi, gpl.texi: New files which are included from the
+	manuals during build.
+
+	* remember.texi: Rename from remember-el.texi.  Make this an exact
+	copy of the version of the manual which is in Emacs 23.
+
+	* remember-extra.texi: New manual containing text that was removed
+	from the version of the manual which is in Emacs 23.
+
 2007-09-14  John Wiegley  <johnw@gnu.org>
 
 	* remember.el (remember-in-new-frame): New option indicating
