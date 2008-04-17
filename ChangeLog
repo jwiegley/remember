@@ -3,6 +3,9 @@
 	* Makefile (dist): Update to use git.
 	(debbuild, debrevision, debrelease): Remove obsolete targets.
 
+	* Makefile.defs (DEBNAME, LASTUPLOAD, BUILDOPTS): Remove obsolete
+	variables.
+
 2008-03-23  Michael Olson  <mwolson@gnu.org>
 
 	* Makefile: Build both remember.texi and remember-extra.texi.

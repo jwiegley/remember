@@ -17,8 +17,5 @@ INSTALLINFO = install-info --info-dir=$(INFODIR)
 
 # Useful only for the maintainer
 PROJECT    = remember
-DEBNAME    = remember-el
 VERSION    = 1.9
 MANUAL     = remember
-LASTUPLOAD = 1.6-1
-BUILDOPTS  =
