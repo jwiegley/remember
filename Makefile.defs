@@ -17,5 +17,5 @@ INSTALLINFO = install-info --info-dir=$(INFODIR)
 
 # Useful only for the maintainer
 PROJECT    = remember
-VERSION    = 1.9
+VERSION    = 2.0
 MANUAL     = remember

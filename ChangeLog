@@ -1,5 +1,7 @@
 2008-04-16  Michael Olson  <mwolson@gnu.org>
 
+	* Release Remember 2.0.
+
 	* Makefile (dist): Update to use git.
 	(debbuild, debrevision, debrelease): Remove obsolete targets.
 
