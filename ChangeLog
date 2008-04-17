@@ -1,3 +1,8 @@
+2008-04-16  Michael Olson  <mwolson@gnu.org>
+
+	* Makefile (dist): Update to use git.
+	(debbuild, debrevision, debrelease): Remove obsolete targets.
+
 2008-03-23  Michael Olson  <mwolson@gnu.org>
 
 	* Makefile: Build both remember.texi and remember-extra.texi.

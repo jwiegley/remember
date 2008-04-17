@@ -60,11 +60,10 @@ distclean:
 	-rm -fr ../$(PROJECT)-$(VERSION)
 
 dist: autoloads distclean
-	tla inventory -sB | tar -cf - --no-recursion -T- | \
-	  (mkdir -p ../$(PROJECT)-$(VERSION); cd ../$(PROJECT)-$(VERSION) && \
-	  tar xf -)
+	git archive --format=tar --prefix=$(PROJECT)-$(VERSION)/ HEAD | \
+	  (cd .. && tar xf -)
+	rm -f ../$(PROJECT)-$(VERSION)/.gitignore
 	cp $(PROJECT)-autoloads.el ../$(PROJECT)-$(VERSION)
-	rm -fr ../$(PROJECT)-$(VERSION)/debian ../$(PROJECT)-$(VERSION)/test
 
 release: dist
 	(cd .. && tar -czf $(PROJECT)-$(VERSION).tar.gz \
@@ -72,36 +71,6 @@ release: dist
 	  zip -r $(PROJECT)-$(VERSION).zip $(PROJECT)-$(VERSION) && \
 	  gpg --detach $(PROJECT)-$(VERSION).tar.gz && \
 	  gpg --detach $(PROJECT)-$(VERSION).zip)
-
-debbuild: 
-	(cd ../$(DEBNAME)-$(VERSION) && \
-	  dpkg-buildpackage -v$(LASTUPLOAD) $(BUILDOPTS) \
-	    -us -uc -rfakeroot && \
-	  echo "Running lintian ..." && \
-	  lintian -i ../$(DEBNAME)_$(VERSION)*.deb || : && \
-	  echo "Done running lintian." && \
-	  debsign)
-	cp ../$(DEBNAME)_$(VERSION)* ../../dist
-
-debrevision: dist
-	-rm -f ../../dist/$(DEBNAME)_*
-	-rm -f ../$(DEBNAME)_$(VERSION)-*
-	-rm -fr ../$(DEBNAME)-$(VERSION)
-	mv ../$(PROJECT)-$(VERSION) ../$(DEBNAME)-$(VERSION)
-	cp -r debian ../$(DEBNAME)-$(VERSION)
-	-rm -fr ../$(DEBNAME)-$(VERSION)/debian/.arch-ids
-	$(MAKE) debbuild
-
-debrelease: dist
-	-rm -f ../../dist/$(DEBNAME)_*
-	-rm -f ../$(DEBNAME)_$(VERSION)*
-	-rm -fr ../$(DEBNAME)-$(VERSION)
-	mv ../$(PROJECT)-$(VERSION) ../$(DEBNAME)-$(VERSION)
-	(cd .. && tar -czf $(DEBNAME)_$(VERSION).orig.tar.gz \
-	          $(DEBNAME)-$(VERSION))
-	cp -r debian ../$(DEBNAME)-$(VERSION)
-	-rm -fr ../$(DEBNAME)-$(VERSION)/debian/.arch-ids
-	$(MAKE) debbuild
 
 upload: release
 	(cd .. && scp $(PROJECT)-$(VERSION).zip* \
